@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+    function showUsers(){
+        $.get('/get_user', function (data) {
+            console.log(data);
+            let table = "<table border='1' class='table'> <tr> <th>Id</th> <th>Phone</th> <th>Name</th></tr>";
+            for (let i = 0; i < data.length; i++) {
+                table = table + "<tr><td>" + data[i].id + "</td><td>" + data[i].phone + "</td><td>" + data[i].name+"</td></tr>";
+            }
+
+            table = table + "</table>";
+
+            $('#test_user').html(table);
+        })
+    }
+
+    $(document).ready(function () {
+
+        showUsers();
+
+    });
+
+    function send_user(){
+        $.ajax({
+            url: '/add_user',
+            dataType: 'json',
+            type: 'POST',
+            cache:false,
+            contentType: 'application/json',
+            data: JSON.stringify({
+                name: $("#user_name").val(),
+                phone: $("#user_phone").val()
+            }),
+            success: function () {
+                showUsers()
+            }
+        })
+    }
+
+</script>
+<h1>Ajax</h1>
+<div id="test_user">aa</div>
+<hr>
+<hr>
+<form action="">
+    <div class="mb-3">
+        <input type="text" class="form-control" id="user_name" placeholder="Name">
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" id="user_phone" placeholder="Phone">
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary" onclick="return send_user()" value="Save">Save</button>
+    </div>
+</form>
+
+</body>
+</html>
